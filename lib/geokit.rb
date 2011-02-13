@@ -23,8 +23,29 @@ end
 
 path = File.expand_path(File.dirname(__FILE__))
 $:.unshift path unless $:.include?(path)
+
+require 'net/http'
+require 'ipaddr'
+require 'rexml/document'
+require 'yaml'
+require 'timeout'
+require 'logger'
+
+require 'geokit/too_many_queries_error'
+require 'geokit/inflector'
 require 'geokit/geocoders'
 require 'geokit/mappable'
+require 'geokit/geocoders/geocode_error'
+require 'geokit/geocoders/geocoder'
+
+require 'geokit/geocoders/ca_geocoder'
+require 'geokit/geocoders/geo_plugin_geocoder'
+require 'geokit/geocoders/geonames_geocoder'
+require 'geokit/geocoders/google_geocoder'
+require 'geokit/geocoders/ip_geocoder'
+require 'geokit/geocoders/multi_geocoder'
+require 'geokit/geocoders/us_geocoder'
+require 'geokit/geocoders/yahoo_geocoder'
 
 # make old-style module name "GeoKit" equivalent to new-style "Geokit"
 GeoKit=Geokit

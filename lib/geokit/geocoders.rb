@@ -1,52 +1,4 @@
-require 'net/http'
-require 'ipaddr'
-require 'rexml/document'
-require 'yaml'
-require 'timeout'
-require 'logger'
-
 module Geokit
-
-  class TooManyQueriesError < StandardError; end
-
-  module Inflector
-
-    extend self
-
-    def titleize(word)
-      humanize(underscore(word)).gsub(/\b([a-z])/u) { $1.capitalize }
-    end
-
-    def underscore(camel_cased_word)
-      camel_cased_word.to_s.gsub(/::/, '/').
-      gsub(/([A-Z]+)([A-Z][a-z])/u,'\1_\2').
-      gsub(/([a-z\d])([A-Z])/u,'\1_\2').
-      tr("-", "_").
-      downcase
-    end
-
-    def humanize(lower_case_and_underscored_word)
-      lower_case_and_underscored_word.to_s.gsub(/_id$/, "").gsub(/_/, " ").capitalize
-    end
-
-    def snake_case(s)
-      return s.downcase if s =~ /^[A-Z]+$/u
-      s.gsub(/([A-Z]+)(?=[A-Z][a-z]?)|\B[A-Z]/u, '_\&') =~ /_*(.*)/
-        return $+.downcase
-
-    end
-
-    def url_escape(s)
-    s.gsub(/([^ a-zA-Z0-9_.-]+)/nu) do
-      '%' + $1.unpack('H2' * $1.size).join('%').upcase
-      end.tr(' ', '+')
-    end
-
-    def camelize(str)
-      str.split('_').map {|w| w.capitalize}.join
-    end
-  end
-
   # Contains a range of geocoders:
   #
   # ### "regular" address geocoders
@@ -110,18 +62,5 @@ module Geokit
 
     __define_accessors
 
-    # Error which is thrown in the event a geocoding error occurs.
-    class GeocodeError < StandardError; end
-
   end
 end
-
-require 'geokit/geocoders/geocoder'
-require 'geokit/geocoders/ca_geocoder'
-require 'geokit/geocoders/geo_plugin_geocoder'
-require 'geokit/geocoders/geonames_geocoder'
-require 'geokit/geocoders/google_geocoder'
-require 'geokit/geocoders/ip_geocoder'
-require 'geokit/geocoders/multi_geocoder'
-require 'geokit/geocoders/us_geocoder'
-require 'geokit/geocoders/yahoo_geocoder'
