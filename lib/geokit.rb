@@ -1,5 +1,6 @@
 module Geokit
   VERSION = '1.5.0'
+
   # These defaults are used in Geokit::Mappable.distance_to and in acts_as_mappable
   @@default_units = :miles
   @@default_formula = :sphere
@@ -20,9 +21,6 @@ module Geokit
     EOS
   end
 end
-
-path = File.expand_path(File.dirname(__FILE__))
-$:.unshift path unless $:.include?(path)
 
 require 'net/http'
 require 'ipaddr'
@@ -46,6 +44,3 @@ require 'geokit/geocoders/ip_geocoder'
 require 'geokit/geocoders/multi_geocoder'
 require 'geokit/geocoders/us_geocoder'
 require 'geokit/geocoders/yahoo_geocoder'
-
-# make old-style module name "GeoKit" equivalent to new-style "Geokit"
-GeoKit=Geokit

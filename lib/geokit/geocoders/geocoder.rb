@@ -52,10 +52,10 @@ module Geokit
         uri = URI.parse(url)
         req = Net::HTTP::Get.new(url)
         req.basic_auth(uri.user, uri.password) if uri.userinfo
-        res = Net::HTTP::Proxy(GeoKit::Geocoders::proxy_addr,
-                GeoKit::Geocoders::proxy_port,
-                GeoKit::Geocoders::proxy_user,
-                GeoKit::Geocoders::proxy_pass).start(uri.host, uri.port) { |http| http.get(uri.path + "?" + uri.query) }
+        res = Net::HTTP::Proxy(Geokit::Geocoders::proxy_addr,
+                Geokit::Geocoders::proxy_port,
+                Geokit::Geocoders::proxy_user,
+                Geokit::Geocoders::proxy_pass).start(uri.host, uri.port) { |http| http.get(uri.path + "?" + uri.query) }
         return res
       end
 
