@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "geokit/version"
 
 Gem::Specification.new do |s|
-  s.name        = "geokit"
+  s.name        = "steveh-geokit"
   s.version     = Geokit::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Andre Lewis", "Bill Eisenhauer", "Steve Hoeksema"]
