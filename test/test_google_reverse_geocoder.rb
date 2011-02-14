@@ -31,7 +31,7 @@ class GoogleReverseGeocoderTest < BaseGeocoderTest #:nodoc: all
 
     @latlng = "51.4578329,7.0166848"
 
-    url = "http://maps.google.com/maps/geo?ll=#{Geokit::Inflector.url_escape(@latlng)}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&ll=#{Geokit::Inflector.url_escape(@latlng)}&oe=utf-8&output=xml"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     res=Geokit::Geocoders::GoogleGeocoder.reverse_geocode(@latlng)
     assert_equal "Nordrhein-Westfalen", res.state

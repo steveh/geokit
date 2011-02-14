@@ -4,13 +4,16 @@ module Geokit
     # contain a Google API key.  Conforms to the interface set by the Geocoder class.
     class GoogleGeocoder < Geocoder
 
+      ENDPOINT = "http://maps.google.com/maps/geo"
+
       private
 
       # Template method which does the reverse-geocode lookup.
       def self.do_reverse_geocode(latlng)
-        latlng=LatLng.normalize(latlng)
-        res = self.call_geocoder_service("http://maps.google.com/maps/geo?ll=#{Geokit::Inflector::url_escape(latlng.ll)}&output=xml&key=#{Geokit::Geocoders::google}&oe=utf-8")
-        #        res = Net::HTTP.get_response(URI.parse("http://maps.google.com/maps/geo?ll=#{Geokit::Inflector::url_escape(address_str)}&output=xml&key=#{Geokit::Geocoders::google}&oe=utf-8"))
+        latlng = LatLng.normalize(latlng)
+        params = { :ll => latlng.ll, :output => "xml", :key => Geokit::Geocoders::google, :oe => "utf-8" }
+        url = "#{ENDPOINT}?" + params.to_query
+        res = self.call_geocoder_service(url)
         return GeoLoc.new unless (res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPOK))
         xml = res.body
         logger.debug "Google reverse-geocoding. LL: #{latlng}. Result: #{xml}"
@@ -43,22 +46,25 @@ module Geokit
       # bounds = Geokit::Bounds.normalize([34.074081, -118.694401], [34.321129, -118.399487])
       # Geokit::Geocoders::GoogleGeocoder.geocode('Winnetka', :bias => bounds).state # => 'CA'
       def self.do_geocode(address, options = {})
-        bias_str = options[:bias] ? construct_bias_string_from_options(options[:bias]) : ''
         address_str = address.is_a?(GeoLoc) ? address.to_geocodeable_s : address
-        res = self.call_geocoder_service("http://maps.google.com/maps/geo?q=#{Geokit::Inflector::url_escape(address_str)}&output=xml#{bias_str}&key=#{Geokit::Geocoders::google}&oe=utf-8")
+        params = { :q => address_str, :output => "xml", :key => Geokit::Geocoders::google, :oe => "utf-8" }.merge(bias_options(options[:bias]))
+        url = "#{ENDPOINT}?" + params.to_query
+        res = self.call_geocoder_service(url)
         return GeoLoc.new if !res.is_a?(Net::HTTPSuccess)
         xml = res.body
         logger.debug "Google geocoding. Address: #{address}. Result: #{xml}"
         return self.xml2GeoLoc(xml, address)
       end
 
-      def self.construct_bias_string_from_options(bias)
+      def self.bias_options(bias)
         if bias.is_a?(String) or bias.is_a?(Symbol)
           # country code biasing
-          "&gl=#{bias.to_s.downcase}"
+          { :gl => bias.to_s.downcase }
         elsif bias.is_a?(Bounds)
           # viewport biasing
-          "&ll=#{bias.center.ll}&spn=#{bias.to_span.ll}"
+          { :ll => bias.center.ll, :spn => bias.to_span.ll }
+        else
+          {}
         end
       end
 

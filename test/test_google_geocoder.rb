@@ -42,7 +42,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
   def test_google_full_address
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_FULL)
-    url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@address)}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&oe=utf-8&output=xml&q=#{Geokit::Inflector.url_escape(@address)}"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     res=Geokit::Geocoders::GoogleGeocoder.geocode(@address)
     assert_equal "CA", res.state
@@ -56,7 +56,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
   def test_google_full_address_with_geo_loc
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_FULL)
-    url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@full_address_short_zip)}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&oe=utf-8&output=xml&q=#{Geokit::Inflector.url_escape(@full_address_short_zip)}"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     res=Geokit::Geocoders::GoogleGeocoder.geocode(@google_full_loc)
     assert_equal "CA", res.state
@@ -70,7 +70,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
   def test_google_full_address_accuracy
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_FULL)
-    url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@full_address_short_zip)}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&oe=utf-8&output=xml&q=#{Geokit::Inflector.url_escape(@full_address_short_zip)}"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     res=Geokit::Geocoders::GoogleGeocoder.geocode(@google_full_loc)
     assert_equal 8, res.accuracy
@@ -79,7 +79,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
   def test_google_city
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_CITY)
-    url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@address)}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&oe=utf-8&output=xml&q=#{Geokit::Inflector.url_escape(@address)}"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     res=Geokit::Geocoders::GoogleGeocoder.geocode(@address)
     assert_equal "CA", res.state
@@ -94,7 +94,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
   def test_google_city_accuracy
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_CITY)
-    url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@address)}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&oe=utf-8&output=xml&q=#{Geokit::Inflector.url_escape(@address)}"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     res=Geokit::Geocoders::GoogleGeocoder.geocode(@address)
     assert_equal 4, res.accuracy
@@ -103,7 +103,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
   def test_google_city_with_geo_loc
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_CITY)
-    url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@address)}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&oe=utf-8&output=xml&q=#{Geokit::Inflector.url_escape(@address)}"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     res=Geokit::Geocoders::GoogleGeocoder.geocode(@google_city_loc)
     assert_equal "CA", res.state
@@ -118,7 +118,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
   def test_google_suggested_bounds
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_RESULT_WITH_SUGGESTED_BOUNDS)
-    url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@full_address_short_zip)}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&oe=utf-8&output=xml&q=#{Geokit::Inflector.url_escape(@full_address_short_zip)}"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     res = Geokit::Geocoders::GoogleGeocoder.geocode(@google_full_loc)
 
@@ -128,7 +128,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
 
   def test_service_unavailable
     response = MockFailure.new
-    url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@address)}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&oe=utf-8&output=xml&q=#{Geokit::Inflector.url_escape(@address)}"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     assert !Geokit::Geocoders::GoogleGeocoder.geocode(@google_city_loc).success
   end
@@ -137,7 +137,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
     #Geokit::Geocoders::GoogleGeocoder.do_geocode('via Sandro Pertini 8, Ossona, MI')
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_MULTI)
-    url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape('via Sandro Pertini 8, Ossona, MI')}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&oe=utf-8&output=xml&q=#{Geokit::Inflector.url_escape('via Sandro Pertini 8, Ossona, MI')}"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     res=Geokit::Geocoders::GoogleGeocoder.geocode('via Sandro Pertini 8, Ossona, MI')
     assert_equal "Lombardy", res.state
@@ -165,7 +165,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
     madrid.lat, madrid.lng = "40.4167413", "-3.7032498"
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_REVERSE_MADRID)
-    url = "http://maps.google.com/maps/geo?ll=#{Geokit::Inflector::url_escape(madrid.ll)}&output=xml&key=#{Geokit::Geocoders::google}&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=#{Geokit::Geocoders::google}&ll=#{Geokit::Inflector::url_escape(madrid.ll)}&oe=utf-8&output=xml"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).
       returns(response)
     res=Geokit::Geocoders::GoogleGeocoder.do_reverse_geocode(madrid.ll)
@@ -191,7 +191,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_COUNTRY_CODE_BIASED_RESULT)
 
-    url = "http://maps.google.com/maps/geo?q=Syracuse&output=xml&gl=it&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?gl=it&key=Google&oe=utf-8&output=xml&q=Syracuse"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     biased_result = Geokit::Geocoders::GoogleGeocoder.geocode('Syracuse', :bias => 'it')
 
@@ -203,7 +203,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_BOUNDS_BIASED_RESULT)
 
-    url = "http://maps.google.com/maps/geo?q=Winnetka&output=xml&ll=34.19769320884902,-118.54716002778494&spn=0.2470479999999995,0.29491400000000567&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&ll=34.19769320884902%2C-118.54716002778494&oe=utf-8&output=xml&q=Winnetka&spn=0.2470479999999995%2C0.29491400000000567"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
 
     bounds = Geokit::Bounds.normalize([34.074081, -118.694401], [34.321129, -118.399487])
@@ -216,7 +216,7 @@ class GoogleGeocoderTest < BaseGeocoderTest #:nodoc: all
   def test_too_many_queries
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_TOO_MANY)
-    url = "http://maps.google.com/maps/geo?q=#{Geokit::Inflector.url_escape(@address)}&output=xml&key=Google&oe=utf-8"
+    url = "http://maps.google.com/maps/geo?key=Google&oe=utf-8&output=xml&q=#{Geokit::Inflector.url_escape(@address)}"
     Geokit::Geocoders::GoogleGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     assert_raise Geokit::TooManyQueriesError do
       res=Geokit::Geocoders::GoogleGeocoder.geocode(@address)
