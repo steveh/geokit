@@ -77,7 +77,7 @@ class GooglePremierGeocoderTest < BaseGeocoderTest #:nodoc: all
   def test_google_full_address
     response = MockSuccess.new
     response.expects(:body).returns(GOOGLE_PREMIER_FULL)
-    url = "http://maps.googleapis.com/maps/api/geocode/json?channel=marketing&client=gme-acme&oe=utf-8&q=65+Upper+Queen+Street%2C+Auckland&sensor=false&signature=7YK1_H7GS5_u6sjBFBF8O_hxfIs="
+    url = "http://maps.googleapis.com/maps/api/geocode/json?address=65+Upper+Queen+Street%2C+Auckland&channel=marketing&client=gme-acme&sensor=false&signature=AO3Ppgjdr7SoQBUcwSdvXFjwN5M="
     Geokit::Geocoders::GooglePremierGeocoder.expects(:call_geocoder_service).with(url).returns(response)
     res = Geokit::Geocoders::GooglePremierGeocoder.geocode(@address)
 

@@ -2,14 +2,15 @@ module Geokit
   module Geocoders
     class GooglePremierGeocoder < Geocoder
 
-      ENDPOINT = "http://maps.googleapis.com/maps/api/geocode/json"
+      HOST = "maps.googleapis.com"
+      ENDPOINT = "/maps/api/geocode/json"
 
       protected
 
         def self.do_reverse_geocode(latlng)
           latlng = LatLng.normalize(latlng)
-          params = { :ll => latlng.ll, :oe => "utf-8", :sensor => false }
-          signed_url = signed_path_for_params(ENDPOINT, params)
+          params = { :latlng => latlng.ll, :sensor => false }
+          signed_url = signed_url_for_params(params)
           res = self.call_geocoder_service(signed_url)
           return GeoLoc.new unless (res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPOK))
           json = JSON.parse(res.body)
@@ -19,8 +20,8 @@ module Geokit
 
         def self.do_geocode(address, options = {})
           address_str = address.is_a?(GeoLoc) ? address.to_geocodeable_s : address
-          params = { :q => address_str, :oe => "utf-8", :sensor => false }
-          signed_url = signed_path_for_params(ENDPOINT, params)
+          params = { :address => address_str, :sensor => false }
+          signed_url = signed_url_for_params(params)
           res = self.call_geocoder_service(signed_url)
           return GeoLoc.new if !res.is_a?(Net::HTTPSuccess)
           json = JSON.parse(res.body)
@@ -121,11 +122,16 @@ module Geokit
 
       private
 
-        def self.signed_path_for_params(endpoint, params)
-          params_to_sign = params.merge({ :client => Geokit::Geocoders.google_client, :channel => Geokit::Geocoders.google_channel })
-          string_to_sign = "#{endpoint}?#{params_to_sign.to_query}"
+        def self.url_for_params(params)
+          params_to_sign = params
+          "http://" + HOST + string_to_sign
+        end
+
+        def self.signed_url_for_params(params)
+          params_to_sign = params.merge({ :client => Geokit::Geocoders.google_client, :channel => Geokit::Geocoders.google_channel }).reject{ |key, value| value.nil? }
+          string_to_sign = "#{ENDPOINT}?#{params_to_sign.to_query}"
           signature = signature_for_string(string_to_sign)
-          string_to_sign + "&signature=#{signature}"
+          "http://" + HOST + string_to_sign + "&signature=#{signature}"
         end
 
         def self.signature_for_string(string)
