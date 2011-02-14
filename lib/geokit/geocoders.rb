@@ -26,6 +26,8 @@ module Geokit
     @@request_timeout = nil
     @@yahoo = 'REPLACE_WITH_YOUR_YAHOO_KEY'
     @@google = 'REPLACE_WITH_YOUR_GOOGLE_KEY'
+    @@google_client = 'REPLACE_WITH_YOUR_GOOGLE_CLIENT'
+    @@google_channel = 'REPLACE_WITH_YOUR_GOOGLE_CHANNEL'
     @@geocoder_us = false
     @@geocoder_ca = false
     @@geonames = false

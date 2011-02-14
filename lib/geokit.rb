@@ -32,6 +32,7 @@ require 'active_support/core_ext/hash'
 require 'active_support/core_ext/object/conversions'
 require 'openssl'
 require 'base64'
+require 'json'
 
 require 'geokit/too_many_queries_error'
 require 'geokit/inflector'
