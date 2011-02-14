@@ -72,13 +72,6 @@ module Geokit
           "APPROXIMATE" => 5,
         }
 
-        PRECISION_MAP = {
-          "ROOFTOP" => "building",
-          "RANGE_INTERPOLATED" => "address",
-          "GEOMETRIC_CENTER" => "street",
-          "APPROXIMATE" => "zip+4",
-        }
-
         # extracts a single geoloc from a result in the google results json
         def self.extract_result(result)
           res = GeoLoc.new
@@ -87,8 +80,8 @@ module Geokit
 
           geometry = result["geometry"] if result
 
-          res.accuracy  = ACCURACY_MAP[geometry["location_type"]]  if geometry
-          res.precision = PRECISION_MAP[geometry["location_type"]] if geometry
+          res.accuracy  = ACCURACY_MAP[geometry["location_type"]] if geometry
+          res.precision = geometry["location_type"].underscore if geometry
 
           location = geometry["location"] if geometry
           res.lat = location["lat"] if location
